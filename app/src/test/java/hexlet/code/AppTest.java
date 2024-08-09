@@ -14,6 +14,7 @@ public class AppTest {
     void beforeEach() {
         Validator validator = new Validator();
         stringSchema = validator.string();
+        numberSchema = validator.number();
     }
 
     @Test
@@ -45,28 +46,46 @@ public class AppTest {
     }
 
     @Test
-    void test() {
-        numberSchema.isValid(5); // true
-
-// Пока не вызван метод required(), null считается валидным
-        numberSchema.isValid(null); // true
-        numberSchema.positive().isValid(null); // true
+    void testRequiredNumberSchema() {
+        assertTrue(numberSchema.isValid(5));
+        assertTrue(numberSchema.isValid(null));
 
         numberSchema.required();
 
-        numberSchema.isValid(null); // false
-        numberSchema.isValid(10); // true
+        assertFalse(numberSchema.isValid(null));
+        assertTrue(numberSchema.isValid(10));
+    }
 
-// Потому что ранее мы вызвали метод positive()
-        numberSchema.isValid(-10); // false
-//  Ноль — не положительное число
-        numberSchema.isValid(0); // false
+    @Test
+    void testPositiveNumberSchema() {
+        assertTrue(numberSchema.isValid(0));
+        assertTrue(numberSchema.isValid(-10));
 
+        numberSchema.positive();
+
+        assertFalse(numberSchema.isValid(0));
+        assertFalse(numberSchema.isValid(-10));
+    }
+
+    @Test
+    void testRangeNumberSchema() {
         numberSchema.range(5, 10);
 
-        numberSchema.isValid(5); // true
-        numberSchema.isValid(10); // true
-        numberSchema.isValid(4); // false
-        numberSchema.isValid(11); // false
+        assertTrue(numberSchema.isValid(5));
+        assertTrue(numberSchema.isValid(10));
+        assertFalse(numberSchema.isValid(4));
+        assertFalse(numberSchema.isValid(11));
+    }
+
+    @Test
+    void testFluentNumberSchema() {
+        assertTrue(numberSchema.isValid(null));
+        assertTrue(numberSchema.isValid(-10));
+
+        assertFalse(numberSchema.required().positive().isValid(0));
+        assertTrue(numberSchema.isValid(1));
+
+        assertFalse(numberSchema.range(5, 10).isValid(4));
+        assertTrue(numberSchema.isValid(10));
     }
 }
