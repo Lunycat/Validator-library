@@ -1,6 +1,10 @@
-package hexlet.code;
+package hexlet.code.schemas;
 
-public class NumberSchema extends BaseSchema<Integer> {
+public final class NumberSchema extends BaseSchema<Integer> {
+
+    public NumberSchema() {
+        rules.put("required", num -> isBlank || num != null);
+    }
 
     public NumberSchema positive() {
         rules.put("positive", num -> num > 0);
@@ -12,8 +16,8 @@ public class NumberSchema extends BaseSchema<Integer> {
         return this;
     }
 
-    @Override
     public NumberSchema required() {
-        return (NumberSchema) super.required();
+        isBlank = false;
+        return this;
     }
 }
