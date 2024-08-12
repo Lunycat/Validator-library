@@ -4,11 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 
 public class StringSchema extends BaseSchema<String> {
 
-    public StringSchema required() {
-        rules.put("required", text -> !StringUtils.isBlank(text));
-        return this;
-    }
-
     public StringSchema contains(String content) {
         rules.put("contains", text -> StringUtils.contains(text, content));
         return this;
@@ -17,5 +12,10 @@ public class StringSchema extends BaseSchema<String> {
     public StringSchema minLength(int minLength) {
         rules.put("minLength", text -> text.length() >= minLength);
         return this;
+    }
+
+    @Override
+    public StringSchema required() {
+        return (StringSchema) super.required();
     }
 }

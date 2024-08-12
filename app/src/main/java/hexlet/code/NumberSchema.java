@@ -1,21 +1,19 @@
 package hexlet.code;
 
-import java.util.Objects;
-
 public class NumberSchema extends BaseSchema<Integer> {
 
-    public NumberSchema required() {
-        rules.put("required", Objects::nonNull);
-        return this;
-    }
-
     public NumberSchema positive() {
-        rules.put("positive", i -> i > 0);
+        rules.put("positive", num -> num > 0);
         return this;
     }
 
     public NumberSchema range(int x, int y) {
-        rules.put("positive", i -> x <= i && i <= y);
+        rules.put("positive", num -> x <= num && num <= y);
         return this;
+    }
+
+    @Override
+    public NumberSchema required() {
+        return (NumberSchema) super.required();
     }
 }

@@ -2,6 +2,7 @@ package hexlet.code;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 public abstract class BaseSchema<T> {
@@ -19,5 +20,17 @@ public abstract class BaseSchema<T> {
             }
         }
         return true;
+    }
+
+    public BaseSchema<T> required() {
+        rules.put("required", this::isBlank);
+        return this;
+    }
+
+    private boolean isBlank(T value) {
+        if (value instanceof String && value.equals("")) {
+            value = null;
+        }
+        return Objects.nonNull(value);
     }
 }
