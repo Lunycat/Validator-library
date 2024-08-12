@@ -3,16 +3,19 @@ package hexlet.code;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.HashMap;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MapSchemaTest {
 
+    private  Validator validator;
     private MapSchema mapSchema;
 
     @BeforeEach
     void beforeEach() {
-        Validator validator = new Validator();
+        validator = new Validator();
         mapSchema = validator.map();
     }
 
@@ -37,5 +40,30 @@ public class MapSchemaTest {
 
         data.put("key2", "value2");
         assertTrue(mapSchema.isValid(data));
+    }
+
+    @Test
+    void testShape() {
+        Map<String, BaseSchema<String>> schemas = new HashMap<>();
+
+        schemas.put("firstName", validator.string().required());
+        schemas.put("lastName", validator.string().required().minLength(2));
+
+        mapSchema.shape(schemas);
+
+        Map<String, String> human1 = new HashMap<>();
+        human1.put("firstName", "John");
+        human1.put("lastName", "Smith");
+        assertTrue(mapSchema.isValid(human1));
+
+        Map<String, String> human2 = new HashMap<>();
+        human2.put("firstName", "John");
+        human2.put("lastName", null);
+        assertFalse(mapSchema.isValid(human2));
+
+        Map<String, String> human3 = new HashMap<>();
+        human3.put("firstName", "Anna");
+        human3.put("lastName", "B");
+        assertFalse(mapSchema.isValid(human3));
     }
 }
