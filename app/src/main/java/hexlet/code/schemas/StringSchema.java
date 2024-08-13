@@ -2,10 +2,6 @@ package hexlet.code.schemas;
 
 public final class StringSchema extends BaseSchema<String> {
 
-    public StringSchema() {
-        rules.put("required", text -> isBlank || !(text == null || text.equals("")));
-    }
-
     public StringSchema contains(String content) {
         rules.put("contains", text -> text.contains(content));
         return this;

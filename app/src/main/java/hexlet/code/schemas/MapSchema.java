@@ -4,10 +4,6 @@ import java.util.Map;
 
 public final class MapSchema extends BaseSchema<Map<String, String>> {
 
-    public MapSchema() {
-        rules.put("required", map -> isBlank || map != null);
-    }
-
     public MapSchema sizeof(int size) {
         rules.put("sizeof", map -> map.size() == size);
         return this;
